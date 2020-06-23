@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Dev, DatabaseService } from 'src/app/services/database.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-developers',
@@ -9,8 +10,10 @@ import { Dev, DatabaseService } from 'src/app/services/database.service';
 export class DevelopersPage implements OnInit {
   developers: Dev[] = [];
 
-  developer = {};
-  product = {};
+  products: Observable<any[]>;
+
+  developer: any = {};
+  product: any = {};
 
   selectedView = 'devs';
 
@@ -28,17 +31,17 @@ export class DevelopersPage implements OnInit {
   }
 
   addDeveloper() {
-    let skills = this.developer['skills'].split(',');
+    let skills = this.developer.skills.split(',');
     skills = skills.map(skill => skill.trim());
     this.db.addDeveloper(this.developers['name'], skills, this.developers['img'])
-      .then(_ => {
+      .then(() => {
         this.developer = {};
       });
   }
 
   addProduct() {
-    this.db.addProduct(this.product['name'], this.product['creator'])
-      .then(_ => {
+    this.db.addProduct(this.product.name, this.product.creator)
+      .then(() => {
         this.product = {};
       });
   }

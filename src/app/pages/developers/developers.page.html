@@ -52,6 +52,7 @@
           <ion-select-option *ngFor="let dev of developers" [value]="dev.id">{{ dev.name }}</ion-select-option>
         </ion-select>
       </ion-item>
+      <ion-button expand="block" (click)="addProduct()">Add Product</ion-button>
       <ion-list>
         <ion-item *ngFor="let prod of products | async">
           <ion-label>

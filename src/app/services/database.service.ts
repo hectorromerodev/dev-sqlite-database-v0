@@ -37,10 +37,10 @@ export class DatabaseService {
   }
 
   seedDatabase() {
-    this.http.get('assets/seed.sql', { responseType: 'text' })
+    this.http.get('../../assets/seed.sql', { responseType: 'text' })
       .subscribe(sql => {
         this.sqlitePorter.importSqlToDb(this.database, sql)
-          .then(_ => {
+          .then(() => {
             this.loadDevelopers();
             this.loadProducts();
             this.dbReady.next(true);
@@ -85,7 +85,7 @@ export class DatabaseService {
   }
 
   addDeveloper(name, skills, img) {
-    const data = [name, JSON.stringify(skills), img];
+    let data = [name, JSON.stringify(skills), img];
     const query = 'INSERT INTO developer (name, skills, img) VALUES (?, ?, ?)';
     return this.database.executeSql(query, data)
       .then(() => {
@@ -120,7 +120,7 @@ export class DatabaseService {
   }
 
   updateDeveloper(dev: Dev) {
-    const data = [dev.name, JSON.stringify(dev.skills), dev.img];
+    let data = [dev.name, JSON.stringify(dev.skills), dev.img];
     const query = `UPDATE developer SET name = ?, img = ?, WHERE id = ${dev.id}`;
     return this.database.executeSql(query, data)
       .then(() => {
@@ -146,7 +146,7 @@ export class DatabaseService {
   }
 
   addProduct(name, creator) {
-    const data = [name, creator];
+    let data = [name, creator];
     return this.database.executeSql('INSERT INTO product (name, creatorId) VALUES (?, ?)', data)
       .then(() => {
         this.loadProducts();
