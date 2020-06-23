@@ -1,0 +1,7 @@
+{
+  "name": "dev-sqlite-database-v0",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
