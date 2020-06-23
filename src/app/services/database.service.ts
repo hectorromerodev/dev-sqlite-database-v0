@@ -60,6 +60,99 @@ export class DatabaseService {
   getProducts(): Observable<any[]> {
     return this.products.asObservable();
   }
+
+  loadDevelopers() {
+    const query = 'SELECT * FROM developer';
+    return this.database.executeSql(query, [])
+      .then(data => {
+        const developers: Dev[] = [];
+        if (data.rows.lengt > 0) {
+          for (var i = 0; i < data.rows.length; i++) {
+            let skills = [];
+            if (data.rows.item(i).skills !== '') {
+              skills = JSON.parse(data.rows().item(i).skills);
+            }
+            developers.push({
+              id: data.rows.item(i).id,
+              name: data.rows.item(i).name,
+              skills: data.rows.item(i).skills,
+              img: data.rows.item(i).img
+            });
+          }
+        }
+        this.developers.next(developers);
+      });
+  }
+
+  addDeveloper(name, skills, img) {
+    const data = [name, JSON.stringify(skills), img];
+    const query = 'INSERT INTO developer (name, skills, img) VALUES (?, ?, ?)';
+    return this.database.executeSql(query, data)
+      .then(() => {
+        this.loadDevelopers();
+      });
+  }
+
+  getDeveloper(id): Promise<Dev> {
+    const query = 'SELECT * FROM developer WHERE id = ?';
+    return this.database.executeSql(query, [id])
+      .then(data => {
+        let skills = [];
+        if (data.rows.item(0).skills !== '') {
+          skills = JSON.parse(data.rows.item(0).skills);
+        }
+        return {
+          id: data.rows.item(0).id,
+          name: data.rows.item(0).name,
+          skills,
+          img: data.rows.item(0).img
+        }
+      });
+  }
+
+  deleteDeveloper(id) {
+    const query = 'DELETE FROM developer WHERE id = ?';
+    return this.database.executeSql(query, [id])
+      .then(_ => {
+        this.loadDevelopers();
+        this.loadProducts();
+      });
+  }
+
+  updateDeveloper(dev: Dev) {
+    const data = [dev.name, JSON.stringify(dev.skills), dev.img];
+    const query = `UPDATE developer SET name = ?, img = ?, WHERE id = ${dev.id}`;
+    return this.database.executeSql(query, data)
+      .then(() => {
+        this.loadDevelopers();
+      });
+  }
+
+  loadProducts() {
+    const query = 'SELECT product.name, product.id, developer.name AS creator FROM product JOIN ON developer.id = product.creatorId';
+    return this.database.executeSql(query, []).then(data => {
+      const products = [];
+      if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+          products.push({
+            name: data.rows.item(i).name,
+            id: data.rows.item(i).id,
+            creator: data.rows.item.item(i).creator
+          });
+        }
+      }
+      this.products.next(products);
+    });
+  }
+
+  addProduct(name, creator) {
+    const data = [name, creator];
+    return this.database.executeSql('INSERT INTO product (name, creatorId) VALUES (?, ?)', data)
+      .then(() => {
+        this.loadProducts();
+      });
+  }
+
 }
 
 export interface Dev {
