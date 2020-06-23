@@ -10,3 +10,5 @@ INSERT or IGNORE INTO product(id, name, creatorId) VALUES (3, 'Ionic Framework',
 INSERT or IGNORE INTO product(id, name, creatorId) VALUES (4, 'FastBike', 1);
 INSERT or IGNORE INTO product(id, name, creatorId) VALUES (5, 'Angular app', 2);
 INSERT or IGNORE INTO product(id, name, creatorId) VALUES (6, 'NodeJS app', 3);
+
+-- This SQL should create 2 tables in our database and inject a few rows of data.
