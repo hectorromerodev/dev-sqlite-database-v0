@@ -5,4 +5,4 @@
     ionic g page pages/developer
 4.  npm install @ionic-native/sqlite @ionic-native/sqlite-porter
 5. ionic cordova plugin add cordova-sqlite-storage
-6. ionic cordova plugin add uk.co.workinge
+6. ionic cordova plugin add uk.co.workingedge.cordova.plugin.sqlitereporter
